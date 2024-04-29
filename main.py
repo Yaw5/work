@@ -20,7 +20,10 @@ from deep_learning_models import TripletNet, identity_loss
 #%%
 
 def train_feature_extractor(
-        file_path = './dataset/Train/dataset_training_aug.h5', 
+        file_path = 
+        '/workspaces/work/Dataset/dataset/Test/Train/dataset_training_aug.h5'
+          # './dataset/Train/dataset_training_aug.h5'  
+         , 
         dev_range = np.arange(0,30, dtype = int), 
         pkt_range = np.arange(0,1000, dtype = int), 
         snr_range = np.arange(20,80)
@@ -206,18 +209,18 @@ def test_classification(
     
     return pred_label, true_label, acc
 
-
-
-
 def test_rogue_device_detection(
     feature_extractor_name,
-    file_path_enrol = './dataset/Test/dataset_residential.h5',
+    file_path_enrol= '/workspaces/work/Dataset/dataset/Test/dataset_residential.h5',
+        #'./dataset/Test/dataset_residential.h5',
     dev_range_enrol = np.arange(30,40, dtype = int),
     pkt_range_enrol = np.arange(0,100, dtype = int),
-    file_path_legitimate = './dataset/Test/dataset_residential.h5',
+    file_path_legitimate = '/workspaces/work/Dataset/dataset/Test/dataset_residential.h5',
+        #'./dataset/Test/dataset_residential.h5',
     dev_range_legitimate = np.arange(30,40, dtype = int),
     pkt_range_legitimate = np.arange(100,200, dtype = int),
-    file_path_rogue = './dataset/Test/dataset_rogue.h5',
+    file_path_rogue ='/workspaces/work/Dataset/dataset/Test/dataset_rogue.h5',
+     # './dataset/Test/dataset_rogue.h5',
     dev_range_rogue = np.arange(40,45, dtype = int),
     pkt_range_rogue = np.arange(0,100, dtype = int),
     ):
@@ -361,7 +364,8 @@ if __name__ == '__main__':
     
     # Specifies what task the program runs for. 
     # 'Train'/'Classification'/'Rogue Device Detection'
-    run_for = 'Classification'
+    #run_for = 'Classification'
+    run_for = 'Rogue Device Detection'
     
     if run_for == 'Train':
 
@@ -369,7 +373,7 @@ if __name__ == '__main__':
         feature_extractor = train_feature_extractor()
         # Save the trained model.
         feature_extractor.save('Extractor.h5')
-        
+        print('-------------------------------------------code under train is ran')   
     
     elif run_for == 'Classification':
         
@@ -378,11 +382,15 @@ if __name__ == '__main__':
         
         # Perform the classification task.
         pred_label, true_label, acc = test_classification(file_path_enrol = 
-                                                          './dataset/Test/dataset_residential.h5',
-                                                          file_path_clf = 
-                                                          './dataset/Test/channel_problem/A.h5',
+                                                         '/workspaces/work/Dataset/dataset/Test/dataset_residential.h5',                           
+                                                          #'./dataset/Test/dataset_residential.h5',
+                                                          file_path_clf =
+                                                          '/workspaces/work/Dataset/dataset/Test/channel problem/A.h5',
+                                                          #'./dataset/Test/channel_problem/A.h5',
                                                           feature_extractor_name = 
-                                                          './models/Extractor_1.h5')
+                                                          '/workspaces/work/Dataset/model/Extractor_1.h5',
+                                                         #'./models/Extractor_1.h5'
+                                                          )
         
         # Plot the confusion matrix.
         conf_mat = confusion_matrix(true_label, pred_label)
@@ -396,12 +404,16 @@ if __name__ == '__main__':
                     yticklabels=classes)
         plt.xlabel('Predicted label', fontsize = 20)
         plt.ylabel('True label', fontsize = 20)
-        
+        plt.savefig("/workspaces/work/image1.jpg")
+        plt.show()
+        print("-------------------------------------------code under classfication is ran")
         
     elif run_for == 'Rogue Device Detection':
         
         # Perform rogue device detection task using three RFF extractors.
-        fpr, tpr, roc_auc, eer = test_rogue_device_detection('./models/Extractor_1.h5')
+        fpr, tpr, roc_auc, eer = test_rogue_device_detection('/workspaces/work/Dataset/model/Extractor_1.h5')
+                                                           
+             #('./models/Extractor_1.h5')
         
         # Plot the ROC curves.
         plt.figure(figsize=(4.8, 2.8))
@@ -414,9 +426,10 @@ if __name__ == '__main__':
         plt.ylabel('True positive rate')
         plt.title('ROC curve')
         plt.legend(loc=4)
+        plt.savefig('roc_curve.pdf',bbox_inches='tight')
         # plt.savefig('roc_curve.pdf',bbox_inches='tight')
         plt.show()    
-        
+        print('-------------------------------------------code under rogue is ran')
 
 
 
