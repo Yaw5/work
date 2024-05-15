@@ -20,8 +20,9 @@ from deep_learning_models import TripletNet, identity_loss
 #%%
 
 def train_feature_extractor(
-        file_path = 
-        '/workspaces/work/Dataset/dataset/Test/Train/dataset_training_aug.h5'
+        file_path =
+        '/workspaces/work/Dataset/dataset_training_aug.h5' 
+        #'/workspaces/work/Dataset/dataset/Test/Train/dataset_training_aug.h5'
           # './dataset/Train/dataset_training_aug.h5'  
          , 
         dev_range = np.arange(0,30, dtype = int), 
@@ -107,13 +108,14 @@ def train_feature_extractor(
     
     
     # Use the RMSprop optimizer for training.
-    opt = RMSprop(learning_rate=1e-3)
+    opt = RMSprop(learning_rate=0.01)
+    #opt = RMSprop(learning_rate=1e-3)
     triplet_net.compile(loss = identity_loss, optimizer = opt)
 
     # Start training.
     history = triplet_net.fit(train_generator,
                               steps_per_epoch = data_train.shape[0]//batch_size,
-                              epochs = 1000,
+                              epochs = 10,
                               validation_data = valid_generator,
                               validation_steps = data_valid.shape[0]//batch_size,
                               verbose=1, 
@@ -211,15 +213,15 @@ def test_classification(
 
 def test_rogue_device_detection(
     feature_extractor_name,
-    file_path_enrol= '/workspaces/work/Dataset/dataset/Test/dataset_residential.h5',
+    file_path_enrol= '/workspaces/work/Dataset/dataset_residential.h5',
         #'./dataset/Test/dataset_residential.h5',
     dev_range_enrol = np.arange(30,40, dtype = int),
     pkt_range_enrol = np.arange(0,100, dtype = int),
-    file_path_legitimate = '/workspaces/work/Dataset/dataset/Test/dataset_residential.h5',
+    file_path_legitimate = '/workspaces/work/Dataset/dataset_residential.h5',
         #'./dataset/Test/dataset_residential.h5',
     dev_range_legitimate = np.arange(30,40, dtype = int),
     pkt_range_legitimate = np.arange(100,200, dtype = int),
-    file_path_rogue ='/workspaces/work/Dataset/dataset/Test/dataset_rogue.h5',
+    file_path_rogue ='/workspaces/work/Dataset/dataset_rogue.h5',
      # './dataset/Test/dataset_rogue.h5',
     dev_range_rogue = np.arange(40,45, dtype = int),
     pkt_range_rogue = np.arange(0,100, dtype = int),
@@ -364,8 +366,9 @@ if __name__ == '__main__':
     
     # Specifies what task the program runs for. 
     # 'Train'/'Classification'/'Rogue Device Detection'
+    run_for = 'Train'
     #run_for = 'Classification'
-    run_for = 'Rogue Device Detection'
+    #run_for = 'Rogue Device Detection'
     
     if run_for == 'Train':
 
@@ -382,13 +385,16 @@ if __name__ == '__main__':
         
         # Perform the classification task.
         pred_label, true_label, acc = test_classification(file_path_enrol = 
-                                                         '/workspaces/work/Dataset/dataset/Test/dataset_residential.h5',                           
+                                                          '/workspaces/work/Dataset/dataset_residential.h5',
+                                                         #'/workspaces/work/Dataset/dataset/Test/dataset_residential.h5',                           
                                                           #'./dataset/Test/dataset_residential.h5',
                                                           file_path_clf =
-                                                          '/workspaces/work/Dataset/dataset/Test/channel problem/A.h5',
+                                                          '/workspaces/work/Dataset/A.h5',
+                                                          #'/workspaces/work/Dataset/dataset/Test/channel problem/A.h5',
                                                           #'./dataset/Test/channel_problem/A.h5',
                                                           feature_extractor_name = 
-                                                          '/workspaces/work/Dataset/model/Extractor_1.h5',
+                                                           '/workspaces/work/Dataset/models/Extractor_1.h5',
+                                                          #'/workspaces/work/Dataset/model/Extractor_1.h5',
                                                          #'./models/Extractor_1.h5'
                                                           )
         
@@ -411,7 +417,7 @@ if __name__ == '__main__':
     elif run_for == 'Rogue Device Detection':
         
         # Perform rogue device detection task using three RFF extractors.
-        fpr, tpr, roc_auc, eer = test_rogue_device_detection('/workspaces/work/Dataset/model/Extractor_1.h5')
+        fpr, tpr, roc_auc, eer = test_rogue_device_detection('/workspaces/work/Dataset/models/Extractor_1.h5')
                                                            
              #('./models/Extractor_1.h5')
         
