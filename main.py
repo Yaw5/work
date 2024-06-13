@@ -115,7 +115,7 @@ def train_feature_extractor(
     # Start training.
     history = triplet_net.fit(train_generator,
                               steps_per_epoch = data_train.shape[0]//batch_size,
-                              epochs = 10,
+                              epochs = 1000,
                               validation_data = valid_generator,
                               validation_steps = data_valid.shape[0]//batch_size,
                               verbose=1, 
